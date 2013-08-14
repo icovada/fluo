@@ -1,17 +1,13 @@
 #!/usr/bin/python3
 
-import sys
 import csv
 import sqlite3
 import fileinput
-import re
 
 conn = sqlite3.connect(':memory:')
 c = conn.cursor()
 c.execute('CREATE TABLE ip (src TEXT, dst TEXT, dp TEXT)')
 c.execute('CREATE TABLE dest (dipport TEXT)')
-
-#print("Importing files")
 
 reader = csv.reader(fileinput.input(),skipinitialspace=True)
 for row in reader:
@@ -38,7 +34,6 @@ for row in c.fetchall():
 
 c.execute('SELECT src FROM ip GROUP BY src ORDER BY src ASC')
 for row in c.fetchall():
-#	c.execute('SELECT COUNT(*),src, dst, dp FROM ip WHERE src LIKE ?',(row[0],))
 	c.execute('SELECT COUNT(*),src, dst, dp FROM ip WHERE src LIKE ? GROUP BY dp',(row[0],))
 	for line in c.fetchall():
 		if (line[0] == 1):
